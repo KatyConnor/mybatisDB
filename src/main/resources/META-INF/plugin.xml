@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<idea-plugin>
+    <id>com.intellij.drools</id>
+    <name>JBoss Drools Support</name>
+
+    <description>JBoss Drools support</description>
+
+    <version>1.0</version>
+    <vendor>JetBrains</vendor>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="hx.data.mybatis.plugin.MapperSqlFileTypeFactory"/>
+    </extensions>
+</idea-plugin>
+

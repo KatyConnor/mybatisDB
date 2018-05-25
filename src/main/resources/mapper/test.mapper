@@ -1,0 +1,6 @@
+import hx.data.mybatis.entity.WhereSqlEntity whereSqlEntitys;
+import hx.data.mybatis.param params;
+
+interface services;
+method queryByParams;
+SELECT whereSqlEntitys FROM user LEFT JOIN menue ON params.id = params.id WHERE params;

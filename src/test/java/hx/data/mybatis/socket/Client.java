@@ -1,0 +1,60 @@
+package hx.data.mybatis.socket;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+
+/**
+ * @Author mingliang
+ * @Date 2017-09-28 11:25
+ */
+public class Client {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(Client.class);
+
+    public static void main(String[] args) {
+        try {
+            Socket client = new Socket("localhost",8026);
+            client.setSoTimeout(10000);
+            //获取键盘输入
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+            //获取Socket的输出流，用来发送数据到服务端
+            PrintStream out = new PrintStream(client.getOutputStream());
+            //获取Socket的输入流，用来接收从服务端发送过来的数据
+            BufferedReader buf =  new BufferedReader(new InputStreamReader(client.getInputStream()));
+            boolean flag = true;
+
+
+            while(flag){
+                System.out.print("输入信息：");
+                String str = input.readLine();
+                //发送数据到服务端
+                out.println(str);
+                if("bye".equals(str)){
+                    flag = false;
+                }else{
+                    try{
+                        //从服务器端接收数据有个时间限制（系统自设，也可以自己设置），超过了这个时间，便会抛出该异常
+                        String echo = buf.readLine();
+                        System.out.println(echo);
+                    }catch(SocketTimeoutException e){
+                        LOGGER.info("Time out, No response！",e);
+                    }
+                }
+            }
+            input.close();
+            if(client != null){
+                //如果构造函数建立起了连接，则关闭套接字，如果没有建立起连接，自然不用关闭
+                client.close(); //只关闭socket，其关联的输入输出流也会被关闭
+            }
+        } catch (IOException e) {
+            LOGGER.info("socket 通信异常！",e);
+        }
+    }
+}
